@@ -17,18 +17,14 @@ void setup()
     int temp=0,i=0;
 	FILE *fp =fopen("data.txt","r");
 
-	//fscanf(fp,"%d\n",temp);
-	//fscanf(fp,"%s %d %d %d", &items[i].name, &items[i].cost, &items[i].stock_count, &items[i].sold);
-	//curr_size=temp;
-	//i++;
-	//printf("%d is the value of curr_size.\n",temp);*/
-
-        while( fscanf(fp,"%s %d %d %d", &items[i].name, &items[i].cost, &items[i].stock_count, &items[i].sold) && (!feof(fp)) )
+    while( (!feof(fp)) )
+    {
+        fscanf(fp,"%s %d %d %d", &items[i].name, &items[i].cost, &items[i].stock_count, &items[i].sold);
         i++;
+    }
 
     curr_size=i;
     fclose(fp);
-
     return;
 
 }
@@ -37,8 +33,9 @@ void save_prog()
 {
     FILE *fp=fopen("data.txt","w");
     int i=0;
-    for(i=0;i<curr_size;i++)
+    for(i=0;i<curr_size-1;i++)
     fprintf (fp, "%s %d %d %d\n",items[i].name,items[i].cost,items[i].stock_count,items[i].sold);
+    fprintf (fp, "%s %d %d %d",items[i].name,items[i].cost,items[i].stock_count,items[i].sold);
     fclose(fp);
 
     return;
@@ -53,6 +50,11 @@ void print_all()
     {
         printf("%s %d \n",items[i].name,items[i].cost);
     }
+}
+
+void clrscr()
+{
+    system("@cls||clear");
 }
 
 
@@ -140,7 +142,6 @@ void refill_stock()
 
 void sale()
 {
-    printf("%d\n",curr_size);
     printf("Enter Item number of the item sold.\n");
     int i_code=0;
 
@@ -155,7 +156,7 @@ void sale()
         int new_sold=0;
         printf("Enter the number of units sold.\n");
         scanf("%d",&new_sold);
-        if(new_sold > ( items[i_code].stock_count - items[i_code].sold    ) )
+        if( new_sold > items[i_code].stock_count )
         {
             printf("Not Enough Stock.\nGoing back to main Menu\n");
             int i=0;
@@ -170,7 +171,7 @@ void sale()
         else
         {
 
-            items[i_code].sold=new_sold;
+            items[i_code].sold+=new_sold;
             items[i_code].stock_count-=new_sold;
             printf("The Updated stock of Item Number %d after sale.\n",i_code+1);
             printf("Item Number\t Item Name \t Item Cost \t In-Stock \t Sold\n");
@@ -194,7 +195,7 @@ void sale()
                 int new_sold=0;
                 printf("Enter the number of units sold.\n");
                 scanf("%d",&new_sold);
-                if(new_sold > ( items[i_code].stock_count - items[i_code].sold    ) )
+                if(new_sold > items[i_code].stock_count )
                 {
                     printf("Not Enough Stock.\nGoing back to main Menu");
                     int i=0;
@@ -208,7 +209,7 @@ void sale()
                     }
                 else
                 {
-                    items[i_code].sold=new_sold;
+                    items[i_code].sold+=new_sold;
                     items[i_code].stock_count-=new_sold;
                     printf("The Updated stock of Item Number %d after sale.\n",i_code+1);
                     printf("Item Number\t Item Name \t Item Cost \t In-Stock \t Sold\n");
@@ -265,26 +266,37 @@ int main()
 
             case 7:
             print_all();
+            clrscr();
             break;
 
             case 1:
                 dsp_inv();
+                system("pause");
+                clrscr();
                 break;
 
             case 2:
                 dsp_trans();
+                system("pause");
+                clrscr();
                 break;
 
             case 3:
                 refill_stock();
+                system("pause");
+                clrscr();
                 break;
 
             case 4:
                  order_stock();
+                 system("pause");
+                 clrscr();
                  break;
 
             case 5:
                 sale();
+                system("pause");
+                clrscr();
                 break;
 
             case 6:
@@ -300,6 +312,8 @@ int main()
 
             default:
                 printf("Please enter a valid input\n");
+                system("pause");
+                clrscr();
                 continue;
 
 

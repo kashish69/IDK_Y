@@ -5,3 +5,4 @@ Chains 120 598 99
 Apples 30 20 16
 Banana 20 20 10
 Papaya 12 0 85
+Chiku 26 2 12

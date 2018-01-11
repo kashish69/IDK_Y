@@ -97,21 +97,21 @@ void dsp_trans()
 
 void refill_stock()
 {
-    printf("Enter the 'Item Code' of the item to be restocked\n");
-    int i_code=-1;
-    scanf("%d",&i_code);
-    i_code--;
+	    printf("Enter the 'Item Code' of the item to be restocked\n");
+	    int i_code=-1;
+	    scanf("%d",&i_code);
+	    i_code--;
 
-    if(i_code>=curr_size || i_code<0)
-        printf("Please enter a valid Item Code, or -1 to exit and go back.\n");
+	    if(i_code>=curr_size || i_code<0)
+	        printf("Please enter a valid Item Code, or -1 to exit and go back.\n");
 
-    else
-    {
-        int new_stock=0;
-        printf("Enter the new Stock count.\n");
-        scanf("%d",&new_stock);
-        items[i_code].stock_count=new_stock;
-        printf("The stock is updated.\n");
+	    else
+	    {
+	        int new_stock=0;
+	        printf("Enter the new Stock count.\n");
+	        scanf("%d",&new_stock);
+	        items[i_code].stock_count=new_stock;
+	        printf("The stock is updated.\n");
         printf("Item Number\t Item Name \t Item Cost \t In-Stock \t Sold\n");
         printf("%d\t\t %s\t\t %d\t\t %d\t\t %d\n",i_code+1,items[i_code].name,items[i_code].cost,items[i_code].stock_count,items[i_code].sold);
         return;
@@ -244,6 +244,106 @@ void order_stock()
 
 }
 
+void delete_items()
+{
+        if(curr_size==0)
+        {
+            printf("There are no items in the inventory. You cannot delete any items.\n");
+            return;
+        }
+
+        int i_code=0;
+
+        printf("Please enter the code of the item to delete.\n");
+        int temp_count=0,actual_code=0;
+
+        while( scanf("%d",&i_code)  )
+        {
+            actual_code=i_code;
+            i_code--;
+            if( actual_code==-1 && temp_count==0 )
+            {
+                printf("Please enter a valid Item Code, or -1 to exit and go back.upper\n");
+                temp_count++;
+     			continue;
+            }
+            else if(actual_code==-1 && temp_count!=0)
+            return;
+
+            else if(i_code>=curr_size || i_code<0)
+            {
+                printf("Please enter a valid Item Code, or -1 to exit and go back.lower\n");
+     			continue;
+            }
+            else
+            {
+                FILE *fp=fopen("data.txt","w");
+                int i=0;
+                int new_curr_size=0;
+                for(i=0;i<curr_size-1;i++)
+                {
+                    if(i_code!=i)
+                    {
+                        fprintf (fp, "%s %d %d %d\n",items[i].name,items[i].cost,items[i].stock_count,items[i].sold);
+                        new_curr_size++;
+                    }
+                }
+
+                if(i!=i_code)
+                fprintf (fp, "%s %d %d %d",items[i].name,items[i].cost,items[i].stock_count,items[i].sold);
+
+                curr_size=new_curr_size;
+                fclose(fp);
+                setup();
+                return;
+
+            }
+        }
+/*
+            else
+            {
+                if(new_sold > items[i_code].stock_count )
+                {
+                    printf("Not Enough Stock.\nGoing back to main Menu");
+                    int i=0;
+                    for(i=0;i<5;i++)
+                    {
+                        printf(".");
+                        sleep;
+                    }
+                    printf("\n");
+                    return;
+                    }
+                else
+                {
+                    items[i_code].sold+=new_sold;
+                    items[i_code].stock_count-=new_sold;
+                    printf("The Updated stock of Item Number %d after sale.\n",i_code+1);
+                    printf("Item Number\t Item Name \t Item Cost \t In-Stock \t Sold\n");
+                    printf("%d\t\t %s\t\t %d\t\t %d\t\t %d\n",i_code+1,items[i_code].name,items[i_code].cost,items[i_code].stock_count,items[i_code].sold);
+                    return;
+                }
+            }
+        }
+
+        return;
+        else
+        {
+        	printf("Enter the name of the item.\n");
+	        scanf("%s",&items[curr_size].name);
+
+
+        }
+
+
+
+        items[curr_size].sold=0;
+        curr_size++;
+*/
+
+
+}
+
 int main()
 {
 
@@ -257,14 +357,15 @@ int main()
             printf("3. Refill Stock\n");
             printf("4. Order New Items\n");
             printf("5. Sale\n");
-            printf("6. EXIT\n");
+            printf("6. Delete Items\n");
+            printf("7. EXIT\n");
 
             scanf("%d",&choice);
 
             switch(choice)
             {
 
-            case 7:
+            case 8:
             print_all();
             clrscr();
             break;
@@ -300,6 +401,12 @@ int main()
                 break;
 
             case 6:
+            	delete_items();
+				system("pause");
+                clrscr();
+                break;
+
+            case 7:
                 printf("Exiting");
                 int i=0;
                 for(i=0;i<5;i++)
@@ -309,6 +416,7 @@ int main()
                 }
                 save_prog();
                 exit(0);
+
 
             default:
                 printf("Please enter a valid input\n");
